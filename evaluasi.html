@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi PJLP - E-Evaluasi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body { 
+            background-color: #fcebd7; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            overflow-x: hidden; 
+        }
+
+        /* --- RESPONSIVE SIDEBAR CONFIGURATION --- */
+        .sidebar {
+            height: 100vh; width: 250px; position: fixed; top: 0; left: 0;
+            background-color: #ff9f43; padding-top: 20px; color: #000000; z-index: 1000; /* PERBAIKAN: Teks judul sidebar menjadi hitam */
+            transition: all 0.3s;
+        }
+        .sidebar-header { text-align: center; padding: 20px; border-bottom: 1px solid rgba(0,0,0,0.15); } /* PERBAIKAN: Border disesuaikan teks hitam */
+        .logo-main { width: 60px; margin-bottom: 10px; }
+        .nav-link { 
+            color: #000000 !important; padding: 15px 25px; display: flex; align-items: center; /* PERBAIKAN: Menu navigasi & ikon menjadi hitam */
+            gap: 15px; font-weight: 500; text-decoration: none; transition: 0.3s; 
+        }
+        .nav-link:hover, .nav-link.active { background-color: rgba(0,0,0,0.1); } /* PERBAIKAN: Background hover disesuaikan */
+        .logout-link { position: absolute; bottom: 20px; width: 100%; }
+
+        /* Main Content Default (Desktop) */
+        .main-content { margin-left: 250px; padding: 30px; min-height: 100vh; transition: all 0.3s; }
+        
+        /* Top Header */
+        .top-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
+            background-color: #ffbd7e; padding: 15px 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            color: #000000; /* PERBAIKAN: Profil pengguna di header konten menjadi hitam */
+        }
+        .dashboard-title { color: #000000; font-weight: 800; font-size: 2.2rem; margin-bottom: 0; display: flex; align-items: center; gap: 10px; }
+        .logo-ptsp-header { height: 50px; width: auto; object-fit: contain; }
+        .user-profile { display: flex; align-items: center; gap: 8px; }
+
+        /* Filter Group Modern Flexbox wrap */
+        .filter-group { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 30px; color: #000000; }
+        .filter-input { background-color: #ffbd7e; border: none; border-radius: 50px; padding: 8px 20px; outline: none; font-weight: 600; color: #000000; }
+        
+        /* Evaluasi Card Container */
+        .eval-card { background-color: #ffbd7e; border-radius: 15px; padding: 30px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.05); color: #000000; }
+        .eval-header-block { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .eval-name-display { font-size: 2rem; font-weight: 800; text-transform: uppercase; color: #ff7a30; text-align: right; }
+        
+        /* Table Layout */
+        .table-eval { width: 100%; margin-top: 20px; min-width: 600px; } 
+        .table-eval th { border-bottom: 2px solid #ff7a30; padding-bottom: 10px; color: #000000; font-weight: 700; } /* PERBAIKAN: Header tabel menjadi hitam pekat */
+        .table-eval td { padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); white-space: nowrap; color: #000000; }
+        
+        /* Tombol Status Aksi */
+        .btn-input { background-color: #ffeb3b; color: #000000; font-weight: 700; border-radius: 50px; padding: 6px 22px; text-decoration: none; display: inline-block; transition: 0.2s; border: none; }
+        .btn-input:hover { background-color: #fdd835; color: #000000; }
+        .btn-sudah-isi { background-color: #78e08f; color: #000000; font-weight: 700; border-radius: 50px; padding: 6px 22px; text-decoration: none; display: inline-block; transition: 0.2s; border: none; } /* PERBAIKAN: Tulisan "Edit Nilai" menjadi hitam agar kontras dengan hijau muda */
+        .btn-sudah-isi:hover { background-color: #60b972; color: #000000; }
+
+        /* --- MEDIA QUERIES (Handphone & Tablet) --- */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                height: auto; width: 100%; position: relative; padding-top: 0; display: flex; flex-direction: column;
+            }
+            .sidebar-header {
+                padding: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; border-bottom: none;
+            }
+            .logo-main { width: 40px; margin-bottom: 0; }
+            
+            .sidebar nav {
+                display: flex; flex-wrap: wrap; justify-content: center; background-color: #e68a2e; width: 100%; margin-top: 0 !important;
+            }
+            .nav-link { padding: 10px 15px; font-size: 0.9rem; }
+            .logout-link { position: relative; bottom: 0; width: auto; background-color: #d47a1e; text-align: center; }
+            
+            .main-content { margin-left: 0; padding: 15px; }
+            
+            .top-header { flex-direction: column; text-align: center; gap: 10px; padding: 15px; }
+            .dashboard-title { font-size: 1.8rem; flex-direction: column; }
+            
+            .filter-group { justify-content: center; width: 100%; }
+            .filter-input { width: 100%; max-width: 280px; text-align: center; }
+            .filter-group i { width: 100%; text-align: center; margin: 5px 0 !important; }
+            
+            .eval-header-block { flex-direction: column; text-align: center; }
+            .eval-name-display { text-align: center; font-size: 1.6rem; }
+            .eval-card { padding: 20px; }
+        }
+
+        @media (max-width: 575.98px) {
+            .sidebar nav { grid-template-columns: 1fr 1fr; display: grid; }
+            .nav-link { justify-content: center; border: 1px solid rgba(0,0,0,0.05); } /* PERBAIKAN: Border pembatas menu mobile disesuaikan */
+            .logout-link { grid-column: span 2; }
+            
+            .filter-input { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="img/jkt.png" alt="Logo" class="logo-main">
+            <h5 class="fw-bold mb-0">e - Evaluasi</h5>
+        </div>
+        
+        <nav class="mt-4">
+            <a href="dashboard.html" class="nav-link"><i class="bi bi-house-door-fill"></i> Dashboard</a>
+            <a href="dt_pjlp.html" class="nav-link"><i class="bi bi-people-fill"></i> Data PJLP</a>
+            <a href="evaluasi.html" class="nav-link active"><i class="bi bi-journal-check"></i> Evaluasi PJLP</a>
+            <a href="laporan.html" class="nav-link"><i class="bi bi-file-earmark-text"></i> Laporan Evaluasi</a>
+            <div class="logout-link">
+                <a href="login.html" class="nav-link justify-content-center"><i class="bi bi-box-arrow-left"></i> Log Out</a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="top-header">
+            <h1 class="dashboard-title"><img src="img/ptsp.png" alt="Logo PTSP" class="logo-ptsp-header"> Evaluasi</h1> 
+            <div class="user-profile">
+                <i class="bi bi-person-circle fs-4"></i> <span class="fw-bold">Ka. Subbag TU</span>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <select class="filter-input" id="filterBulan" onchange="loadDataEvaluasi()">
+                <option value="Belum dipilih">Bulan (Semua)</option>
+                <option value="Januari">Januari</option>
+                <option value="Februari">Februari</option>
+                <option value="Maret">Maret</option>
+                <option value="April">April</option>
+                <option value="Mei">Mei</option>
+                <option value="Juni">Juni</option>
+                <option value="Juli">Juli</option>
+                <option value="Agustus">Agustus</option>
+                <option value="September">September</option>
+                <option value="Oktober">Oktober</option>
+                <option value="November">November</option>
+                <option value="Desember">Desember</option>
+            </select>
+            <select class="filter-input">
+                <option>2026</option>
+                <option>2027</option>
+            </select>
+            <i class="bi bi-search fs-4 mx-2"></i>
+            <select class="filter-input" id="selectPjlp" onchange="loadDataEvaluasi()">
+                <option value="">Pilih Nama PJLP</option>
+            </select>
+        </div>
+
+        <div class="eval-card">
+            <div class="eval-header-block">
+                <h2 class="fw-bold mb-0" id="displayTahun">2026</h2>
+                <div class="eval-name-display" id="displayName">PILIH PJLP</div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table-eval">
+                    <thead>
+                        <tr>
+                            <th>Bulan</th>
+                            <th>NIP</th>
+                            <th>Jabatan</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="evalTableBody">
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Silakan pilih nama PJLP terlebih dahulu.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const select = document.getElementById('selectPjlp');
+            select.innerHTML = '<option value="">Pilih Nama PJLP</option>';
+            
+            const listPjlp = JSON.parse(localStorage.getItem('koleksi_pjlp_baru')) || [];
+            
+            listPjlp.forEach(p => {
+                let opt = document.createElement('option');
+                opt.value = p.nip;
+                opt.innerHTML = p.nama;
+                select.appendChild(opt);
+            });
+        });
+
+        function cekStatusNilai(nip, bulan) {
+            const listEvaluasi = JSON.parse(localStorage.getItem('evaluasi_data')) || [];
+            return listEvaluasi.some(x => String(x.nip) === String(nip) && String(x.bulan).toLowerCase() === String(bulan).toLowerCase());
+        }
+
+        function loadDataEvaluasi() {
+            const nipTerpilih = document.getElementById('selectPjlp').value;
+            const bulanTerpilih = document.getElementById('filterBulan').value;
+            const listPjlp = JSON.parse(localStorage.getItem('koleksi_pjlp_baru')) || [];
+            const tbody = document.getElementById('evalTableBody');
+            const displayNama = document.getElementById('displayName');
+            
+            tbody.innerHTML = ""; 
+            
+            if (nipTerpilih) {
+                const p = listPjlp.find(x => x.nip === nipTerpilih);
+                
+                if (!p) {
+                    displayNama.innerHTML = "PILIH PJLP";
+                    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Data PJLP tidak ditemukan atau telah dihapus.</td></tr>`;
+                    return;
+                }
+
+                displayNama.innerHTML = p.nama;
+                
+                if (bulanTerpilih !== "Belum dipilih") {
+                    const sudahAdaNilai = cekStatusNilai(p.nip, bulanTerpilih);
+                    
+                    tbody.innerHTML = `
+                        <tr>
+                            <td><b>${bulanTerpilih}</b></td>
+                            <td>${p.nip}</td>
+                            <td>${p.jabatan}</td>
+                            <td class="text-center">
+                                ${sudahAdaNilai ? 
+                                    `<a href="edit_nilai.html?nip=${p.nip}&bulan=${bulanTerpilih}" class="btn-sudah-isi"><i class="bi bi-pencil-square"></i> Edit Nilai</a>` : 
+                                    `<a href="input_nilai.html?nip=${p.nip}&bulan=${bulanTerpilih}" class="btn-input"><i class="bi bi-plus-circle"></i> Input Nilai</a>`
+                                }
+                            </td>
+                        </tr>
+                    `;
+                } 
+                else {
+                    let gabunganBaris = "";
+                    daftarBulan.forEach(bln => {
+                        const sudahAdaNilai = cekStatusNilai(p.nip, bln);
+                        
+                        gabunganBaris += `
+                            <tr>
+                                <td><b>${bln}</b></td>
+                                <td>${p.nip}</td>
+                                <td>${p.jabatan}</td>
+                                <td class="text-center">
+                                    ${sudahAdaNilai ? 
+                                        `<a href="edit_nilai.html?nip=${p.nip}&bulan=${bln}" class="btn-sudah-isi"><i class="bi bi-pencil-square"></i> Edit Nilai</a>` : 
+                                        `<a href="input_nilai.html?nip=${p.nip}&bulan=${bln}" class="btn-input"><i class="bi bi-plus-circle"></i> Input Nilai</a>`
+                                    }
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    tbody.innerHTML = gabunganBaris;
+                }
+            } else {
+                displayNama.innerHTML = "PILIH PJLP";
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Silakan pilih nama PJLP terlebih dahulu.</td></tr>`;
+            }
+        }
+    </script>
+</body>
+</html>

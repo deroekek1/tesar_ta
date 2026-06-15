@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Evaluasi PJLP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body { 
+            background-color: #fcebd7; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            overflow-x: hidden; 
+        }
+
+        /* --- RESPONSIVE SIDEBAR CONFIGURATION --- */
+        .sidebar {
+            height: 100vh; width: 250px; position: fixed; top: 0; left: 0;
+            background-color: #ff9f43; padding-top: 20px; color: black; z-index: 1000;
+            transition: all 0.3s;
+        }
+        .sidebar-header { text-align: center; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.3); }
+        .logo-main { width: 60px; margin-bottom: 10px; }
+        .nav-link { 
+            color: black !important; padding: 15px 25px; display: flex; align-items: center; 
+            gap: 15px; font-weight: 500; text-decoration: none; transition: 0.3s; 
+        }
+        .nav-link:hover, .nav-link.active { background-color: rgba(255,255,255,0.2); }
+        .logout-link { position: absolute; bottom: 20px; width: 100%; }
+
+        /* Main Content Default (Desktop) */
+        .main-content { margin-left: 250px; padding: 30px; transition: all 0.3s; }
+        
+        /* Utilities & Header */
+        .top-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
+            background-color: #ffbd7e; padding: 15px 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .dashboard-title { color: #000000; font-weight: 800; font-size: 2.2rem; margin-bottom: 0; display: flex; align-items: center; gap: 10px; }
+        .logo-ptsp-header { height: 50px; width: auto; object-fit: contain; }
+
+        /* Form Containers */
+        .info-box { background-color: #ffbd7e; border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        
+        /* Mengubah flex mendatar menjadi flex-wrap agar aman di handphone */
+        .eval-section { 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin-bottom: 20px; 
+            display: flex; 
+            flex-wrap: wrap; 
+            align-items: center; 
+            gap: 15px;
+        }
+        .eval-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            flex-grow: 1;
+        }
+        .eval-item {
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .bg-absensi { background-color: #e0e0e0; }
+        .bg-kinerja { background-color: #b2ebf2; }
+        .bg-kedisiplinan { background-color: #ffe0b2; }
+
+        .input-pill { background: white; border: 1px solid #ccc; border-radius: 10px; width: 100%; max-width: 80px; padding: 6px; text-align: center; font-weight: bold; }
+        .score-display { font-size: 2.5rem; font-weight: 800; min-width: 70px; text-align: right; color: #333; }
+        .grand-total-box { background-color: #ffbd7e; border-radius: 10px; padding: 15px 30px; display: inline-block; }
+        
+        .btn-ubah { background-color: #84e06d; border-radius: 20px; padding: 10px 30px; font-weight: bold; border: none; }
+        .btn-batal { background-color: #ff0000; color: white; border-radius: 20px; padding: 10px 30px; font-weight: bold; border: none; text-decoration: none; display: inline-block; }
+        .select-bulan-input { background-color: #fff; border: 1px solid #ccc; border-radius: 8px; padding: 2px 10px; font-weight: bold; color: #333; }
+
+        /* --- MEDIA QUERIES (Handphone & Tablet) --- */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                height: auto; width: 100%; position: relative; padding-top: 0; display: flex; flex-direction: column;
+            }
+            .sidebar-header {
+                padding: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; border-bottom: none;
+            }
+            .logo-main { width: 40px; margin-bottom: 0; }
+            
+            .sidebar nav {
+                display: flex; flex-wrap: wrap; justify-content: center; background-color: #e68a2e; width: 100%; margin-top: 0 !important;
+            }
+            .nav-link { padding: 10px 15px; font-size: 0.9rem; }
+            .logout-link { position: relative; bottom: 0; width: auto; background-color: #d47a1e; text-align: center; }
+            
+            .main-content { margin-left: 0; padding: 15px; }
+            
+            .top-header { flex-direction: column; text-align: center; gap: 10px; padding: 15px; }
+            .dashboard-title { font-size: 1.8rem; flex-direction: column; }
+            
+            .info-box { flex-direction: column; text-align: center; gap: 15px; }
+            .info-box table { margin: 0 auto; }
+            
+            .eval-section { justify-content: center; }
+            .score-display { width: 100%; text-align: center; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 10px; margin-top: 5px; }
+        }
+
+        @media (max-width: 575.98px) {
+            .sidebar nav { grid-template-columns: 1fr 1fr; display: grid; }
+            .nav-link { justify-content: center; border: 1px solid rgba(255,255,255,0.1); }
+            .logout-link { grid-column: span 2; }
+            
+            .eval-item { flex: calc(50% - 15px); min-width: 110px; } /* Tampilan 2 kolom input di layar HP */
+            .grand-total-box { width: 100%; text-align: center; }
+            
+            .action-buttons { display: flex; flex-direction: column; gap: 10px; }
+            .btn-batal, .btn-ubah { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="img/jkt.png" alt="Logo" class="logo-main">
+            <h5 class="fw-bold mb-0">e - Evaluasi</h5>
+        </div>
+        <nav class="mt-4">
+            <a href="dashboard.html" class="nav-link"><i class="bi bi-house-door-fill"></i> Dashboard</a>
+            <a href="dt_pjlp.html" class="nav-link"><i class="bi bi-people-fill"></i> Data PJLP</a>
+            <a href="evaluasi.html" class="nav-link"><i class="bi bi-journal-check"></i> Evaluasi PJLP</a>
+            <a href="laporan.html" class="nav-link active"><i class="bi bi-file-earmark-text"></i> Laporan</a>
+            <div class="logout-link">
+                <a href="login.html" class="nav-link justify-content-center"><i class="bi bi-box-arrow-left"></i> Log Out</a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="top-header">
+            <h1 class="dashboard-title"><img src="img/ptsp.png" alt="Logo PTSP" class="logo-ptsp-header"> Edit Nilai</h1> 
+            <div class="fw-bold"><i class="bi bi-person-circle"></i> Ka. Subbag TU</div>
+        </div>
+
+        <div class="info-box d-flex align-items-center justify-content-between">
+            <div>
+                <table class="table table-sm table-borderless mb-0">
+                    <tr>
+                        <td><b>Bulan</b></td>
+                        <td>: 
+                            <select id="infoBulan" class="select-bulan-input">
+                                <option value="Januari">Januari</option>
+                                <option value="Februari">Februari</option>
+                                <option value="Maret">Maret</option>
+                                <option value="April">April</option>
+                                <option value="Mei">Mei</option>
+                                <option value="Juni">Juni</option>
+                                <option value="Juli">Juli</option>
+                                <option value="Agustus">Agustus</option>
+                                <option value="September">September</option>
+                                <option value="Oktober">Oktober</option>
+                                <option value="November">November</option>
+                                <option value="Desember">Desember</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr><td><b>NIP</b></td><td>: <span id="infoNip">-</span></td></tr>
+                    <tr><td><b>Jabatan</b></td><td>: <span id="infoJabatan">-</span></td></tr>
+                </table>
+            </div>
+            <h2 class="fw-bold text-uppercase mt-2 mt-lg-0" id="displayName">NAMA PJLP</h2>
+        </div>
+
+        <form onsubmit="updatePenilaian(event)">
+            <h5 class="fw-bold">Absensi (30%)</h5>
+            <div class="eval-section bg-absensi">
+                <div class="eval-grid">
+                    <div class="eval-item">Telat (Mnt)<br><input type="number" class="input-pill input-absensi" value="0" min="0"></div>
+                    <div class="eval-item">Alpha (Hr)<br><input type="number" class="input-pill input-absensi" value="0" min="0"></div>
+                    <div class="eval-item">Sakit (Hr)<br><input type="number" class="input-pill input-absensi" value="0" min="0"></div>
+                    <div class="eval-item">Cuti (Hr)<br><input type="number" class="input-pill input-absensi" value="0" min="0"></div>
+                </div>
+                <div class="score-display" id="scoreAbsensi">30</div>
+            </div>
+
+            <h5 class="fw-bold">Kinerja (50%)</h5>
+            <div class="eval-section bg-kinerja">
+                <div class="eval-grid">
+                    <div class="eval-item">Orientasi<br><input type="number" class="input-pill input-kinerja" value="0" min="0" max="100"></div>
+                    <div class="eval-item">Inisiatif<br><input type="number" class="input-pill input-kinerja" value="0" min="0" max="100"></div>
+                    <div class="eval-item">Tanggung Jwb<br><input type="number" class="input-pill input-kinerja" value="0" min="0" max="100"></div>
+                    <div class="eval-item">Kerja Sama<br><input type="number" class="input-pill input-kinerja" value="0" min="0" max="100"></div>
+                </div>
+                <div class="score-display" id="scoreKinerja">40</div>
+            </div>
+
+            <h5 class="fw-bold">Kedisiplinan (20%)</h5>
+            <div class="eval-section bg-kedisiplinan">
+                <div class="eval-grid">
+                    <div class="eval-item">Pelayanan<br><input type="number" class="input-pill input-kedisiplinan" value="0" min="0" max="100"></div>
+                    <div class="eval-item">Peraturan<br><input type="number" class="input-pill input-kedisiplinan" value="0" min="0" max="100"></div>
+                    <div class="eval-item">Seragam<br><input type="number" class="input-pill input-kedisiplinan" value="0" min="0" max="100"></div>
+                    <div class="eval-item">Jam Kerja<br><input type="number" class="input-pill input-kedisiplinan" value="0" min="0" max="100"></div>
+                </div>
+                <div class="score-display" id="scoreKedisiplinan">17</div>
+            </div>
+
+            <div class="text-end">
+                <div class="grand-total-box">
+                    <h4 class="mb-0 fw-bold">Total Baru: <span id="grandTotal" class="text-primary">87</span></h4>
+                </div>
+            </div>
+
+            <div class="text-end mt-4 action-buttons">
+                <a href="laporan.html" class="btn-batal">Batal</a>
+                <button type="submit" class="btn-ubah">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let nipDariUrl = "", bulanDariUrl = "";
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            nipDariUrl = urlParams.get('nip');
+            bulanDariUrl = urlParams.get('bulan');
+
+            const listPjlp = JSON.parse(localStorage.getItem('koleksi_pjlp_baru')) || [];
+            const listEvaluasi = JSON.parse(localStorage.getItem('evaluasi_data')) || [];
+            
+            document.getElementById('infoNip').innerText = nipDariUrl;
+
+            if (bulanDariUrl) {
+                const selectBulan = document.getElementById('infoBulan');
+                const bulanKapital = bulanDariUrl.charAt(0).toUpperCase() + bulanDariUrl.slice(1).toLowerCase();
+                selectBulan.value = bulanKapital;
+            }
+
+            const dataPjlp = listPjlp.find(x => x.nip === nipDariUrl);
+            if(dataPjlp) {
+                document.getElementById('displayName').innerText = dataPjlp.nama;
+                document.getElementById('infoJabatan').innerText = dataPjlp.jabatan;
+            }
+
+            const dataNilaiLama = listEvaluasi.find(x => String(x.nip) === String(nipDariUrl) && String(x.bulan).toLowerCase() === String(bulanDariUrl).toLowerCase());
+            
+            if(dataNilaiLama) {
+                if(dataNilaiLama.rincian_absensi) document.querySelectorAll('.input-absensi').forEach((el, i) => el.value = dataNilaiLama.rincian_absensi[i] || 0);
+                if(dataNilaiLama.rincian_kinerja) document.querySelectorAll('.input-kinerja').forEach((el, i) => el.value = dataNilaiLama.rincian_kinerja[i] || 0);
+                if(dataNilaiLama.rincian_kedisiplinan) document.querySelectorAll('.input-kedisiplinan').forEach((el, i) => el.value = dataNilaiLama.rincian_kedisiplinan[i] || 0);
+            }
+
+            document.querySelectorAll('.input-pill').forEach(i => i.addEventListener('input', kalkulasiOtomatis));
+            kalkulasiOtomatis();
+        });
+
+        function kalkulasiOtomatis() {
+            const abs = document.querySelectorAll('.input-absensi');
+            let murniAbsensi = 100 - (parseFloat(abs[0].value) * 0.5) - (parseFloat(abs[1].value) * 10);
+            const bobotAbsensi = Math.round(Math.max(0, murniAbsensi) * 0.3);
+            document.getElementById('scoreAbsensi').innerText = bobotAbsensi;
+
+            const kin = document.querySelectorAll('.input-kinerja');
+            let sumK = 0; kin.forEach(i => sumK += parseFloat(i.value) || 0);
+            const bobotKinerja = Math.round((sumK / kin.length) * 0.5);
+            document.getElementById('scoreKinerja').innerText = bobotKinerja;
+
+            const dis = document.querySelectorAll('.input-kedisiplinan');
+            let sumD = 0; dis.forEach(i => sumD += parseFloat(i.value) || 0);
+            const bobotDis = Math.round((sumD / dis.length) * 0.2);
+            document.getElementById('scoreKedisiplinan').innerText = bobotDis;
+
+            document.getElementById('grandTotal').innerText = bobotAbsensi + bobotKinerja + bobotDis;
+        }
+
+        function updatePenilaian(e) {
+            e.preventDefault();
+            const total = parseInt(document.getElementById('grandTotal').innerText);
+            const bulanAktif = document.getElementById('infoBulan').value;
+            
+            let ketValue = "Kurang";
+            let badgeClass = "bg-secondary";
+
+            if (total >= 85) {
+                ketValue = "Sangat Baik";
+                badgeClass = "bg-primary";
+            } else if (total >= 75) {
+                ketValue = "Baik";
+                badgeClass = "bg-success";
+            } else if (total >= 60) {
+                ketValue = "Cukup";
+                badgeClass = "bg-warning";
+            }
+
+            const dataUpdate = {
+                nip: nipDariUrl, 
+                bulan: bulanAktif, 
+                nama: document.getElementById('displayName').innerText,
+                jabatan: document.getElementById('infoJabatan').innerText,
+                total: total,
+                keterangan: ketValue,
+                badge: badgeClass,
+                rincian_absensi: Array.from(document.querySelectorAll('.input-absensi')).map(el => el.value),
+                rincian_kinerja: Array.from(document.querySelectorAll('.input-kinerja')).map(el => el.value),
+                rincian_kedisiplinan: Array.from(document.querySelectorAll('.input-kedisiplinan')).map(el => el.value)
+            };
+
+            let listEvaluasi = JSON.parse(localStorage.getItem('evaluasi_data')) || [];
+            
+            listEvaluasi = listEvaluasi.filter(x => !(String(x.nip) === String(nipDariUrl) && String(x.bulan).toLowerCase() === String(bulanDariUrl).toLowerCase()));
+            const indexBulanBaru = listEvaluasi.findIndex(x => String(x.nip) === String(nipDariUrl) && String(x.bulan).toLowerCase() === String(bulanAktif).toLowerCase());
+
+            if (indexBulanBaru !== -1) {
+                listEvaluasi[indexBulanBaru] = dataUpdate;
+            } else {
+                listEvaluasi.push(dataUpdate);
+            }
+
+            localStorage.setItem('evaluasi_data', JSON.stringify(listEvaluasi));
+            alert("Data evaluasi bulan " + bulanAktif + " berhasil diperbarui!");
+            window.location.href = 'laporan.html';
+        }
+    </script>
+</body>
+</html>

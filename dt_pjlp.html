@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data PJLP - E-Evaluasi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body { 
+            background-color: #fcebd7; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            overflow-x: hidden; 
+        }
+
+        /* --- RESPONSIVE SIDEBAR CONFIGURATION --- */
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #ff9f43;
+            padding-top: 20px;
+            color: #000000; /* PERBAIKAN: Mengubah teks judul sidebar menjadi hitam */
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.15); /* PERBAIKAN: Border disesuaikan agar serasi dengan teks hitam */
+        }
+
+        .logo-main {
+            width: 60px;
+            margin-bottom: 10px;
+        }
+
+        .nav-link { 
+            color: #000000 !important; /* PERBAIKAN: Mengubah warna menu teks navigasi & ikon menjadi hitam */
+            padding: 15px 25px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            font-weight: 500;
+            text-decoration: none; 
+            transition: 0.3s; 
+        }
+
+        .nav-link:hover, .nav-link.active { 
+            background-color: rgba(0,0,0,0.1); /* PERBAIKAN: Mengubah background hover agar teks hitam tetap terbaca jelas */
+        }
+
+        .logout-link {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+        }
+
+        /* Main Content Default (Desktop) */
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+
+        /* Utilities & Cards */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: #ffbd7e;
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            color: #000000; /* PERBAIKAN: Mengubah teks profil/header isi konten menjadi hitam */
+        }
+
+        .dashboard-title {
+            color: #000000;
+            font-weight: 800;
+            font-size: 2.2rem;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-ptsp-header {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .table-container { 
+            background-color: #ffbd7e; 
+            border-radius: 15px; 
+            padding: 25px; 
+            margin-top: 10px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+        }
+
+        .table thead th { 
+            border-bottom: 2px solid #ff9f43; 
+            color: #000000; /* PERBAIKAN: Memastikan teks kepala tabel berwarna hitam pekat */
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            padding-bottom: 15px; 
+        }
+
+        .btn-tambah { background-color: #ff7a30; color: #000000 !important; border-radius: 50px; padding: 8px 25px; font-weight: 700; border: none; text-decoration: none; display: inline-block; } /* PERBAIKAN: Mengubah teks tombol Tambah PJLP menjadi hitam */
+        .btn-edit { background-color: #ffeb3b; color: #000000; border-radius: 20px; font-size: 0.8rem; font-weight: 700; padding: 6px 18px; border: none; text-decoration: none; margin-right: 5px; display: inline-block; }
+        .btn-delete { background-color: #ff0000; color: #ffffff; border-radius: 20px; font-size: 0.8rem; font-weight: 700; padding: 6px 18px; border: none; cursor: pointer; display: inline-block; } /* PERBAIKAN: Mengubah teks tombol Delete menjadi hitam */
+        .img-placeholder { width: 40px; height: 40px; background-color: #333; color: white; display: flex; align-items: center; justify-content: center; border-radius: 6px; margin: 0 auto; }
+        .thumb-foto { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; display: block; margin: 0 auto; }
+
+        /* --- MEDIA QUERIES (Handphone & Tablet) --- */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                height: auto;
+                width: 100%;
+                position: relative;
+                padding-top: 0;
+                display: flex;
+                flex-direction: column;
+            }
+            .sidebar-header {
+                padding: 15px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                border-bottom: none;
+            }
+            .logo-main { width: 40px; margin-bottom: 0; }
+            
+            .sidebar nav {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                background-color: #e68a2e;
+                width: 100%;
+                margin-top: 0 !important;
+            }
+            .nav-link {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            .logout-link {
+                position: relative;
+                bottom: 0;
+                width: auto;
+                background-color: #d47a1e;
+                text-align: center;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            
+            .top-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+                padding: 15px;
+            }
+            .dashboard-title {
+                font-size: 1.8rem;
+                flex-direction: column;
+            }
+            .table-container {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .sidebar nav {
+                grid-template-columns: 1fr 1fr;
+                display: grid;
+            }
+            .nav-link {
+                justify-content: center;
+                border: 1px solid rgba(0,0,0,0.05); /* PERBAIKAN: Garis tepi menu pada mobile disesuaikan */
+            }
+            .logout-link {
+                grid-column: span 2;
+            }
+            .btn-tambah {
+                width: 100%;
+                text-align: center;
+            }
+            .btn-edit, .btn-delete {
+                display: block;
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 5px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="img/jkt.png" alt="Logo" class="logo-main">
+            <h5 class="fw-bold mb-0">e - Evaluasi</h5>
+        </div>
+        
+        <nav class="mt-4">
+            <a href="dashboard.html" class="nav-link"><i class="bi bi-house-door-fill"></i> Dashboard</a>
+            <a href="dt_pjlp.html" class="nav-link active"><i class="bi bi-people-fill"></i> Data PJLP</a>
+            <a href="evaluasi.html" class="nav-link"><i class="bi bi-journal-check"></i> Evaluasi PJLP</a>
+            <a href="laporan.html" class="nav-link"><i class="bi bi-file-earmark-text"></i> Laporan</a>
+            <div class="logout-link">
+                <a href="login.html" class="nav-link justify-content-center"><i class="bi bi-box-arrow-left"></i> Log Out</a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="top-header">
+            <h1 class="dashboard-title"><img src="img/ptsp.png" alt="Logo PTSP" class="logo-ptsp-header"> Data PJLP</h1> 
+            <div class="user-profile">
+                <i class="bi bi-person-circle fs-4"></i> <span class="fw-bold">Ka. Subbag TU</span>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mb-3">
+            <a href="tambah_pjlp.html" class="btn btn-tambah"><i class="bi bi-person-plus-fill me-2"></i> Tambah PJLP</a>
+        </div>
+
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="table table-borderless align-middle" style="min-width: 700px;">
+                    <thead>
+                        <tr>
+                            <th>NIP</th>
+                            <th>Nama</th>
+                            <th>Jabatan</th>
+                            <th>Alamat</th>
+                            <th class="text-center">Foto</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pjlpTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderTable();
+        });
+
+        function renderTable() {
+            const listPjlp = JSON.parse(localStorage.getItem('koleksi_pjlp_baru')) || [];
+            const tbody = document.getElementById("pjlpTableBody");
+            
+            tbody.innerHTML = "";
+
+            if(listPjlp.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Belum ada data PJLP.</td></tr>`;
+                return;
+            }
+
+            listPjlp.forEach((pegawai, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${pegawai.nip}</td>
+                    <td><strong>${pegawai.nama}</strong></td>
+                    <td>${pegawai.jabatan}</td>
+                    <td>${pegawai.alamat || '-'}</td>
+                    <td>${pegawai.foto ? `<img src="${pegawai.foto}" class="thumb-foto">` : `<div class="img-placeholder"><i class="bi bi-image"></i></div>`}</td>
+                    <td class="text-center" style="white-space: nowrap;">
+                        <a href="edit_pjlp.html?nip=${pegawai.nip}" class="btn-edit">Edit</a>
+                        <button class="btn-delete" onclick="confirmDelete('${pegawai.nip}', '${pegawai.nama}')">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function confirmDelete(nip, nama) {
+            if (confirm("Apakah Anda yakin ingin menghapus data permanent untuk " + nama + "?")) {
+                let listPjlp = JSON.parse(localStorage.getItem('koleksi_pjlp_baru')) || [];
+                listPjlp = listPjlp.filter(pegawai => pegawai.nip !== nip);
+                localStorage.setItem('koleksi_pjlp_baru', JSON.stringify(listPjlp));
+                renderTable();
+            }
+        }
+    </script>
+</body>
+</html>
